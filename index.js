@@ -3,14 +3,13 @@ const cors = require('cors');
 const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors())
 app.use(express.json())
 
-// warehouseManagement
-// Vc5o7pqdzBTZTg3y
+
 
 
 
@@ -25,12 +24,29 @@ async function run() {
 
 
         // get all data
+        app.get('/allItems', async (req, res) => {
+            const query = {}
+            const cursor = perfumeCollection.find(query)
+            const allItems = await cursor.toArray()
+            res.send(allItems)
+        })
+
+        // get six data
         app.get('/items', async (req, res) => {
             const query = {}
             const cursor = perfumeCollection.find(query)
-            const items = await cursor.toArray()
+            const items = await cursor.limit(6).toArray()
             res.send(items)
         })
+
+        // get one data
+        app.get('/item/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const item = await perfumeCollection.findOne(query)
+            res.send(item)
+        })
+
     }
     finally {
         // await client.close()
