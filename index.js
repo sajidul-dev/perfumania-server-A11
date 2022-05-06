@@ -14,7 +14,6 @@ app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.k5ac2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -45,6 +44,21 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const item = await perfumeCollection.findOne(query)
             res.send(item)
+        })
+
+        // update data
+        app.put('/item/:id', async (req, res) => {
+            const id = req.params.id
+            const updateItem = req.body
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updatedDOC = {
+                $set: {
+                    quantity: updateItem.quantity
+                }
+            }
+            const result = await perfumeCollection.updateOne(filter, updatedDOC, options)
+            res.send(result)
         })
 
     }
