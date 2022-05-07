@@ -22,6 +22,8 @@ async function run() {
         const perfumeCollection = client.db("warehouse").collection("items");
 
 
+        const addedCollection = client.db('warehouse').collection('newItem')
+
         // get all data
         app.get('/allItems', async (req, res) => {
             const query = {}
@@ -58,6 +60,14 @@ async function run() {
                 }
             }
             const result = await perfumeCollection.updateOne(filter, updatedDOC, options)
+            res.send(result)
+        })
+
+        // Add item
+        app.post('/addItem', async (req, res) => {
+            const newItem = req.body
+            console.log(newItem);
+            const result = await perfumeCollection.insertOne(newItem)
             res.send(result)
         })
 
