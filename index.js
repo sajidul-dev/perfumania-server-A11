@@ -81,7 +81,7 @@ async function run() {
             const email = req.query.email
             console.log(email);
             const query = { email: email }
-            const cursor = perfumeCollection.find(query)
+            const cursor = perfumeCollection.filter(query)
             const myItems = await cursor.toArray()
             res.send(myItems)
         })
