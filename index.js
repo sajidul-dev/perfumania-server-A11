@@ -77,6 +77,15 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/myitems', async (req, res) => {
+            const email = req.query.email
+            console.log(email);
+            const query = { email: email }
+            const cursor = perfumeCollection.find(query)
+            const myItems = await cursor.toArray()
+            res.send(myItems)
+        })
+
     }
     finally {
         // await client.close()
