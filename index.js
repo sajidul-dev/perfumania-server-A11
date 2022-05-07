@@ -67,7 +67,7 @@ async function run() {
         app.post('/addItem', async (req, res) => {
             const newItem = req.body
             console.log(newItem);
-            const result = await perfumeCollection.insertOne(newItem)
+            const result = await addedCollection.insertOne(newItem)
             res.send(result)
         })
 
