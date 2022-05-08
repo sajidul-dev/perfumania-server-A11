@@ -29,7 +29,8 @@ async function run() {
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '1d'
             })
-            res.send({ accessToken })
+            console.log(accessToken);
+            // res.send({ accessToken })
         })
 
         // get all data
