@@ -29,8 +29,7 @@ async function run() {
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '1d'
             })
-            console.log(accessToken);
-            // res.send({ accessToken })
+            res.send({ accessToken })
         })
 
         // get all data
@@ -75,9 +74,17 @@ async function run() {
         // Add item
         app.post('/addItem', async (req, res) => {
             const newItem = req.body
-            console.log(newItem);
-            const result = await perfumeCollection.insertOne(newItem)
-            res.send(result)
+            const tokenInfo = req.headers.authorization
+            const [email, accessToken] = tokenInfo.split(' ')
+            const decoded = verifyToken(accessToken)
+            if (email === decoded.email) {
+                const result = await perfumeCollection.insertOne(newItem)
+                res.send(result)
+            }
+            else {
+                res.send({ success: 'unAuthorized Access' })
+            }
+
         })
 
         // delete an item
@@ -104,6 +111,18 @@ async function run() {
 }
 run().catch(console.dir)
 
+function verifyToken(token) {
+    let email
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (error, decoded) {
+        if (error) {
+            email = 'Invalid Email'
+        }
+        if (decoded) {
+            email = decoded
+        }
+    });
+    return email
+}
 
 
 
