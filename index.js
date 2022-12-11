@@ -54,6 +54,7 @@ async function run() {
         // get six data
         app.get('/items', async (req, res) => {
             const query = {}
+            console.log(query)
             const cursor = perfumeCollection.find(query)
             const items = await cursor.limit(6).toArray()
             res.send(items)
